@@ -23,10 +23,10 @@ export const AppMachine = createMachine<BreathContext, BreathEvent>(
     initial: 'idle',
     context: {
       breaths: 0,
-      maxBreaths: 3,
+      maxBreaths: 30,
       interval: 0.4,
       elapsedTime: 0,
-      holded: 0,
+            holded: 0,
     },
     states: {
       idle: { on: { NEXT: 'breathing' } },
@@ -62,7 +62,7 @@ export const AppMachine = createMachine<BreathContext, BreathEvent>(
             on: { NEXT: 'retention'},
           },
           retention: {
-            after: { 500: { target: 'fin' } },
+            after: { 5000: { target: 'fin' } },
           },
           fin: { type: 'final' },
         },
