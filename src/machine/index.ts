@@ -1,6 +1,7 @@
 import { assign, createMachine } from 'xstate'
 import { increaseBreaths, increaseHolded, resetBreaths } from './actions'
 import { isBelowMaxBreaths } from './guards'
+import { BreathContext, BreathEvent } from './machine'
 
 const tickTimer = (context: BreathContext, event: BreathEvent) => {
   return (cb: CallableFunction) => {
@@ -68,9 +69,5 @@ export const AppMachine = createMachine<BreathContext, BreathEvent>(
         },
       },
     },
-  },
-  {
-    guards: { isBelowMaxBreaths },
-    actions: { increaseBreaths, resetBreaths, increaseHolded },
-  },
+  }
 )
