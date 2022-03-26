@@ -5,7 +5,7 @@ import { Context } from '../../machine/machine'
 function Stage() {
   const [state, send] = useContext<Context>(AppContext)
     
-  return <div>Stage {state.value}</div>
+  return <div>Stage {state.value?.breathing || state.value}</div>
 }
 
 export default Stage
