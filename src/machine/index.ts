@@ -1,73 +1,71 @@
-import { assign, createMachine } from 'xstate'
-import { increaseBreaths, increaseHolded, resetBreaths } from './actions'
-import { isBelowMaxBreaths } from './guards'
-import { BreathContext, BreathEvent } from './machine'
+import { createMachine } from 'xstate'
 
-const tickTimer = (context: BreathContext, event: BreathEvent) => {
-  return (cb: CallableFunction) => {
-    const interval = setInterval(() => cb('TICK'), 1000 * context.interval)
 
-    return () => clearInterval(interval)
-  }
-}
-
-const holdTimer = (context: BreathContext, event: BreathEvent) => {
-  return (cb: CallableFunction) => {
-    const interval = setInterval(() => assign<BreathContext>({ holded: ({holded}) => holded + 1 }) , 1000)
-    return () => clearInterval(interval)
-  }
-}
-
-export const AppMachine = createMachine<BreathContext, BreathEvent>(
+export const AppMachine = (maxBreaths: number = 30, interval: number = 0.5) => createMachine(
   {
     id: 'breathMachine',
     initial: 'idle',
+    tsTypes: {} as import('./index.typegen').Typegen0,
     context: {
       breaths: 0,
-      maxBreaths: 30,
-      interval: 0.4,
+      maxBreaths: maxBreaths,
+      interval: interval,
       elapsedTime: 0,
-            holded: 0,
+      holded: 0,
     },
     states: {
       idle: { on: { NEXT: 'breathing' } },
-      breathing: {
+      'breathing': {
         on: { NEXT: 'holding', CANCLE: 'idle' },
-        onDone: { target: 'holding', actions: resetBreaths },
+        onDone: { target: 'holding', actions: 'resetBreaths' },
         initial: 'inhale',
         states: {
-          inhale: {
-            entry: increaseBreaths,
-            invoke: { id: 'timer', src: tickTimer },
+          'inhale': {
+            entry: 'increaseBreaths',
+            invoke: { id: 'timer', src: 'tickTimer' },
             on: {
               TICK: [
-                { cond: isBelowMaxBreaths, target: 'exhale' },
+                { cond: 'isBelowMaxBreaths', target: 'exhale' },
                 { target: 'fin' },
               ],
             },
           },
-          exhale: {
-            invoke: { id: 'timer', src: tickTimer },
+          'exhale': {
+            invoke: { id: 'timer', src: 'tickTimer' },
             on: { TICK: 'inhale' },
           },
-          fin: { type: 'final' },
+          'fin': { type: 'final' },
         },
       },
-      holding: {
+      'holding': {
         on: { NEXT: 'breathing', CANCLE: 'idle' },
         onDone: { target: 'breathing' },
         initial: 'hold',
         states: {
-          hold: {
-            invoke: { id: 'counter', src: holdTimer },
-            on: { NEXT: 'retention'},
+          'hold': {
+            on: { NEXT: 'retention' },
           },
-          retention: {
+          'retention': {
             after: { 5000: { target: 'fin' } },
           },
-          fin: { type: 'final' },
+          'fin': { type: 'final' },
         },
       },
     },
-  }
+  },
+  {
+    actions: {
+      increaseBreaths : (context) => {context.breaths += 1},
+      resetBreaths: (context) => {context.breaths = 0},
+    },
+    guards: {
+      isBelowMaxBreaths: (context) => context.breaths < context.maxBreaths,
+    },
+    services: {
+      tickTimer : (context) => (cb) => {
+          const interval = setInterval(() => cb('TICK'), 1000 * context.interval)
+          return () => clearInterval(interval)
+      }
+    },
+  },
 )

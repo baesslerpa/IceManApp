@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react'
 
 type ButtonProps = {
-  onClick: () => void
+  onClick?: () => void
 }
 export const Button: FunctionComponent<ButtonProps> = ({
   children,

@@ -5,13 +5,16 @@ import React, {
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button/Button'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { AppMachine } from '../machine'
 import { AppContext } from '../machine/context'
+import { Typegen0 } from '../machine/index.typegen'
 import { BreathScreen } from '../screens/breathScreen'
 import { HoldingScreen } from '../screens/holdingScreen'
 
 const App = () => {
-  const [state, send] = useMachine(AppMachine)
+  const [settings] = useLocalStorage('settings', {})
+  const [state, send] = useMachine(AppMachine(settings.maxBreaths, settings.interval))
 
   useEffect(() => {
     console.log('App state:', state)
@@ -35,10 +38,10 @@ const StartScreen = () => {
   const [state, send] = useContext(AppContext)
   return (
     <div className="StartScreen h-screen flex justify-center items-center flex-col">
-      <h1 className="mb-8">Welcome to the app!</h1>
+      <h1 className="mb-8 text-center">Welcome to the app!</h1>
       <div className='flex items-center gap-5 flex-col sm:flex-row'>
         <Button onClick={() => send('NEXT')}>Meditate</Button>
-        <div onClick={() => navigate('/settings')} className='w-full sm:w-auto text-brown bg-white rounded-full shadow-lg py-3 px-6 shadow-lg cursor-pointer'>Settings</div>
+        <div onClick={() => navigate('/settings')} className='w-full text-center sm:w-auto text-brown bg-white rounded-full shadow-lg py-3 px-6 shadow-lg cursor-pointer'>Settings</div>
       </div>
     </div>
   )
