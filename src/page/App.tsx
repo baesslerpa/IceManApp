@@ -24,9 +24,11 @@ const App = () => {
       <div className="App">
         {state.value === 'idle' && <StartScreen />}
         {state.value !== 'idle' && <BackButton />}
-
-        {state.value.breathing && <BreathScreen />}
-        {state.value.holding && <HoldingScreen />}
+        
+        {//@ts-ignore
+        state.value.breathing && <BreathScreen />}
+        {//@ts-ignore
+        state.value.holding && <HoldingScreen />}
       </div>
     </AppContext.Provider>
   )

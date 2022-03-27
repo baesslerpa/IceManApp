@@ -63,6 +63,7 @@ export const AppMachine = (maxBreaths: number = 30, interval: number = 0.5) => c
     },
     services: {
       tickTimer : (context) => (cb) => {
+          //@ts-ignore
           const interval = setInterval(() => cb('TICK'), 1000 * context.interval)
           return () => clearInterval(interval)
       }
