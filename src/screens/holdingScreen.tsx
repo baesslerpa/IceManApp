@@ -17,14 +17,10 @@ function setStartTime(): Date {
 const CountDown = () => {
   const { seconds } = useTimer({ expiryTimestamp: setStartTime() })
   useEffect(() => {
-    console.log('timerSeconds', seconds);
+    console.log('timerSeconds', seconds)
   }, [])
-    
-  return (
-    <span className="absolute font-black">
-      {seconds}
-    </span>
-  )
+
+  return <div>{seconds}</div>
 }
 
 export const HoldingScreen = () => {
@@ -41,7 +37,6 @@ export const HoldingScreen = () => {
     pause,
     reset,
   } = useStopwatch({ autoStart: true })
-
 
   useEffect(() => {
     if (state.value.holding === 'hold') start()
@@ -61,20 +56,44 @@ export const HoldingScreen = () => {
   }, [])
 
   return (
-    <div className="HoldingScreen">
+    <div className="HoldingScreen h-screen flex justify-center items-center flex-col">
       {state.value.holding == 'hold' && (
-        <div>
-          <h1>
-            {state.value.holding} {minutes}:{padNumber(seconds)}
-          </h1>
+        <div className="flex flex-col items-center justify-center">
+          <h2 className="text-center mb-9 text-dark-green leading-16 ">
+            Doubletap <br /> to continue
+          </h2>
+
+          <div className="bg-white rounded-full w-60 h-60 flex items-center justify-center flex-col">
+            <div className="mb-3 font-black text-xl tracking-wide">
+              {state.value.holding.toUpperCase()}
+            </div>
+
+            <div>
+              <strong className="font-black shadow-dark-green drop-shadow-md text-orange text-5xl">
+                {padNumber(minutes)}:{padNumber(seconds)}
+              </strong>
+            </div>
+          </div>
         </div>
       )}
 
       {state.value.holding == 'retention' && (
-        <div>
-          <h1>
-            {state.value.holding}aaa <CountDown />
-          </h1>
+        <div className="flex flex-col items-center justify-center">
+          <h2 className="text-center mb-9 text-dark-green leading-16 ">
+            Take a breath
+          </h2>
+
+          <div className="bg-white rounded-full w-60 h-60 flex items-center justify-center flex-col">
+            <div className="mb-3 font-black text-xl tracking-wide">
+              {state.value.holding.toUpperCase()}
+            </div>
+
+            <div>
+              <strong className="font-black shadow-dark-green drop-shadow-md text-eagle-green text-5xl">
+                <CountDown />
+              </strong>
+            </div>
+          </div>
         </div>
       )}
     </div>

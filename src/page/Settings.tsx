@@ -1,6 +1,7 @@
 import React, { Children, FunctionComponent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button/Button'
+import { ButtonWrapper } from '../components/Button/ButtonWrapper'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 
 export default function Settings() {
@@ -13,13 +14,11 @@ export default function Settings() {
   const [interval, setInterval] = useState(settings.interval)
 
   function onSubmitForm(e: React.FormEvent) {
+    console.log('onSubmitForm', e)
+
     e.preventDefault()
-    setSettings({
-      ...settings,
-      maxBreaths,
-      interval,
-    })
-    console.log(maxBreaths, interval)
+    setSettings({ ...settings, maxBreaths, interval })
+    navigate('/')
   }
 
   return (
@@ -28,7 +27,7 @@ export default function Settings() {
 
       <form onSubmit={onSubmitForm}>
         <InputWrap>
-          <label>Max Breaths ({maxBreaths})</label>
+          <label className="font-medium mb-4 text-xl text-eagle-green">Max Breaths ({maxBreaths})</label>
           <input
             name="maxBreaths"
             type="range"
@@ -40,7 +39,7 @@ export default function Settings() {
         </InputWrap>
 
         <InputWrap>
-          <label className="mt-6">Interval ({interval})</label>
+          <label className="font-medium mb-4 text-xl text-eagle-green">Interval ({interval})</label>
           <input
             name="interval"
             type="range"
@@ -52,14 +51,22 @@ export default function Settings() {
           />
         </InputWrap>
 
-        <button>Save</button>
+        <div className='mt-6'>
+        <ButtonWrapper>
+          <Button>Save Settings</Button>
+          <div
+            onClick={() => navigate('/')}
+            className="w-full inline-block text-center sm:w-auto text-brown bg-white rounded-full shadow-lg py-3 px-6 shadow-lg cursor-pointer"
+          >
+            Back
+          </div>
+        </ButtonWrapper>
+        </div>
       </form>
-
-      <Button onClick={() => navigate('/')}> Back </Button>
     </div>
   )
 }
 
 const InputWrap: FunctionComponent = ({ children }) => (
-  <div className="flex flex-col items-center text-center">{children}</div>
+  <div className="flex flex-col bg-white/20 mb-4 px-4 py-6 rounded-lg backdrop-blur-sm items-center text-center">{children}</div>
 )
