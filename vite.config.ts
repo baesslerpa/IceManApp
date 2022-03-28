@@ -30,7 +30,7 @@ export default defineConfig({
         ],
         theme_color: '#28545f',
         background_color: '#28545f',
-        display: 'standalone',
+        display: 'full-screen',
       },
     }),
     react(),
