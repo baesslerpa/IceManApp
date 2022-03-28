@@ -1,0 +1,23 @@
+{
+    "name": "IceMan Breath App",
+    "short_name": "Breath App",
+    "start_url": "/",
+    "display": "full-screen",
+    "background_color": "#28545f",
+    "lang": "en",
+    "scope": "/",
+    "description": "App to practice Breathing",
+    "icons": [
+      {
+        "src": "/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/android-chrome-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "theme_color": "#28545f"
+  }
